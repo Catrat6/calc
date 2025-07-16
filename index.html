@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Trip Cost Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+    }
+    .container {
+      background: white;
+      max-width: 500px;
+      margin: auto;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    }
+    .container-logo {
+      text-align: center;
+      margin-top: 5vh;
+    }
+    .container-logo img {
+        height: 300px;
+        width: 300px;
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Trip Cost Calculator</h2>
+  <label for="loadedMiles">Loaded Miles:</label>
+  <input type="number" id="loadedMiles" min="0" step="0.1">
+
+  <label for="unloadedMiles">Unloaded Miles:</label>
+  <input type="number" id="unloadedMiles" min="0" step="0.1">
+
+  <label for="legs">Number of Legs (1 or 2):</label>
+  <input type="number" id="legs" min="1" max="2">
+
+  <label for="waitTime">Wait Time (in minutes, if 2-leg trip):</label>
+  <input type="number" id="waitTime" min="0" step="1">
+
+  <button onclick="calculateTrip()">Calculate</button>
+
+  <div class="result" id="result"></div>
+</div>
+
+<div class="container-logo">
+    <img src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/11ls8NFHrenxaYYbjnHy/media/67d0b3a8913827583ee46115.png" alt="">
+</div>
+
+<script>
+function calculateTrip() {
+  const loadedMiles = parseFloat(document.getElementById('loadedMiles').value) || 0;
+  const unloadedMiles = parseFloat(document.getElementById('unloadedMiles').value) || 0;
+  const legs = parseInt(document.getElementById('legs').value) || 1;
+  const waitTime = parseInt(document.getElementById('waitTime').value) || 0;
+
+  const perMileRate = 2.40;
+  const flatPerLeg = 25;
+  const waitChargeRate = 15; // per 30 mins
+  const processingFeeRate = 0.04;
+
+  // Base cost
+  let baseCost = (loadedMiles * perMileRate) + (legs * flatPerLeg);
+
+  // Wait time charge (only if 2-leg trip)
+  if (legs === 2 && waitTime > 0) {
+    const waitUnits = Math.ceil(waitTime / 30);
+    baseCost += waitUnits * waitChargeRate;
+  }
+
+  // Unloaded miles rule
+  let unloadedCharge = 0;
+  if (unloadedMiles > 10) {
+    unloadedCharge = Math.max(unloadedMiles * perMileRate);
+  }
+
+  let subtotal = baseCost + unloadedCharge;
+  let processingFee = subtotal * processingFeeRate;
+  let total = subtotal + processingFee;
+
+  document.getElementById('result').innerHTML =
+    `Trip Cost Breakdown:<br>
+    Base Cost: $${baseCost.toFixed(2)}<br>
+    Unloaded Charge: $${unloadedCharge.toFixed(2)}<br>
+    Processing Fee (4%): $${processingFee.toFixed(2)}<br>
+    <strong>Total: $${total.toFixed(2)}</strong>`;
+}
+</script>
+
+</body>
+</html>
