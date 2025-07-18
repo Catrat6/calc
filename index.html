@@ -29,7 +29,7 @@
       background: white;
       max-width: 500px;
       margin: auto;
-      padding: 20px;
+      padding: 40px;
       border-radius: 10px;
       box-shadow: 0 0 15px rgba(0,0,0,0.2);
       animation: fromtheleft 3s ease-in-out;
@@ -56,6 +56,9 @@
       width: 100%;
       padding: 8px;
       margin-top: 5px;
+    }
+    input {
+      margin-bottom: 20px;
     }
     button {
       margin-top: 20px;
@@ -87,16 +90,18 @@
   <p><b>Wait Time Charge:</b> $15 per 30 minutes (if 2-leg trip)</p>
   <p><b>Unloaded Miles:</b> Charged at $2.40 per mile</p>
   <p><b>Processing Fee:</b> 4% of the subtotal</p>
+  <label for="legs">Number of Legs:</label>
+  <input type="number" id="legs" min="1" max="2">
+
   <label for="loadedMiles">Loaded Miles:</label>
   <input type="number" id="loadedMiles" min="0" step="0.1">
 
   <label for="unloadedMiles">Unloaded Miles:</label>
   <input type="number" id="unloadedMiles" min="0" step="0.1">
 
-  <label for="legs">Number of Legs (1 or 2):</label>
-  <input type="number" id="legs" min="1" max="2">
-
-  <label for="waitTime">Wait Time (in minutes, if 2-leg trip):</label>
+  <label for="waitTime">Wait Time (in minutes):</label>
+  <br>
+  <label for="waitTime"><i>Billed in 30 min. units, less than 30 min. rounded up to one unit</i></label>
   <input type="number" id="waitTime" min="0" step="1">
 
   <button onclick="calculateTrip()">Calculate</button>
@@ -107,6 +112,11 @@
 <div class="container-logo">
     <img src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/11ls8NFHrenxaYYbjnHy/media/67d0b3a8913827583ee46115.png" alt="">
 </div>
+
+<div class="footer-logo">
+  <li><a href="#"></a></li>
+</div>
+
 
 <script>
 function calculateTrip() {
@@ -123,29 +133,33 @@ function calculateTrip() {
   // Base cost
   let baseCost = (loadedMiles * perMileRate) + (legs * flatPerLeg);
 
-  // Wait time charge (only if 2-leg trip)
-  if (legs === 2 && waitTime > 0) {
+  // Wait time charge (only if more than 2 legs)
+  let waitCharge = 0;
+  if (legs >= 2) {
     const waitUnits = Math.ceil(waitTime / 30);
-    baseCost += waitUnits * waitChargeRate;
+    waitCharge = waitUnits * waitChargeRate;
+    baseCost += waitCharge;
   }
 
-  // Unloaded miles rule
- 
-
-  let unloadedCharge = Math.max(unloadedMiles * perMileRate);
+  // Unloaded miles charge
+  let unloadedCharge = unloadedMiles * perMileRate;
 
   let subtotal = baseCost + unloadedCharge;
   let processingFee = subtotal * processingFeeRate;
   let total = subtotal + processingFee;
 
   document.getElementById('result').innerHTML =
-    `Trip Cost Breakdown:<br>
-    Base Cost: $${baseCost.toFixed(2)}<br>
-    Unloaded Charge: $${unloadedCharge.toFixed(2)}<br>
-    Processing Fee (4%): $${processingFee.toFixed(2)}<br>
-    <strong>Total: $${total.toFixed(2)}</strong>`;
+  `Trip Cost Breakdown:<br>
+  Base Cost: $${baseCost.toFixed(2)}<br>
+  Base Cost Breakdown:<br>
+  - Loaded Miles (${loadedMiles} miles): $${(loadedMiles * perMileRate).toFixed(2)}<br>
+  - Legs (${legs} legs): $${(legs * flatPerLeg).toFixed(2)}<br>
+  ${legs >= 2 ? `- Wait Time (${waitTime} minutes): $${waitCharge.toFixed(2)}<br>` : ''}
+  <strong>Subtotal: $${subtotal.toFixed(2)}</strong><br>
+  Unloaded Charge: $${unloadedCharge.toFixed(2)}<br>
+  Processing Fee (4%): $${processingFee.toFixed(2)}<br>
+  <strong>Total: $${total.toFixed(2)}</strong>`;
 }
 </script>
-
 </body>
 </html>
