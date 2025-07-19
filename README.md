@@ -2,6 +2,9 @@
 
 Calculator for figuring out trip costs at lakeshore transportation 
 
+Curently housed on an extension of my personal domain here:
+https://www.blackmagik.xyz/lake_calc.html
+
 ## Update
 
 Greatly changed the application now, re coded the calculation to better fit our needs and made a lot of cosmetic changes.
