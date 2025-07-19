@@ -1,84 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <title>LakeShore Transportation | Trip Cost Calculator</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+<meta charset="UTF-8">
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="LakeShore Transportation Trip Cost Calculator">
+<meta name="keywords" content="Trip Cost, Calculator, LakeShore Transportation, Hospital Discharge, Transportation Costs">
+<meta name="Black Magik Design" content="LakeShore Transportation">
+<script src="https://kit.fontawesome.com/e8fc6ab9e5.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="css/style.css">
+<title>LakeShore Transportation | Trip Cost Calculator</title>
 
-    }
-
-    @keyframes fromtheleft {
-      from {
-        transform: translateX(-150%);
-       
-      }
-      to {
-        transform: translateX(0);
-       
-      }
-    }
-    .container {
-      background: white;
-      max-width: 500px;
-      margin: auto;
-      padding: 40px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.2);
-      animation: fromtheleft 3s ease-in-out;
-    }
-    .container-logo {
-      text-align: center;
-      margin-top: 5vh;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    } 
-    .container-logo img {
-        height: 300px;
-        width: 300px;
-        animation: fadeIn 3s ease-in-out;
-    }
-    input[type="number"] {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-    }
-    input {
-      margin-bottom: 20px;
-    }
-    button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      background: #007BFF;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #0056b3;
-    }
-    .result {
-      margin-top: 20px;
-      font-size: 18px;
-      font-weight: bold;
-    }
-  </style>
 </head>
 <body>
 
@@ -86,10 +18,15 @@
   <h2>Trip Cost Calculator</h2>
   <h4 class="cost-break"><b>Here is a breakdown of the charges:</b></h4>
   <p><b>Base Cost:</b> $25 per leg</p>
+  <p><b>Discharge Fee:</b> $25 per leg (if hospital discharge)</p>
   <p><b>Per Mile Rate:</b> $2.40 per mile</p>
   <p><b>Wait Time Charge:</b> $15 per 30 minutes (if 2-leg trip)</p>
   <p><b>Unloaded Miles:</b> Charged at $2.40 per mile</p>
   <p><b>Processing Fee:</b> 4% of the subtotal</p>
+
+  <label for="discharge">Is this a hospital discharge?</label>
+  <input type="text" id="discharge" placeholder="Yes or No">
+
   <label for="legs">Number of Legs:</label>
   <input type="number" id="legs" min="1" max="2">
 
@@ -116,50 +53,6 @@
 <div class="footer-logo">
   <li><a href="#"></a></li>
 </div>
-
-
-<script>
-function calculateTrip() {
-  const loadedMiles = parseFloat(document.getElementById('loadedMiles').value) || 0;
-  const unloadedMiles = parseFloat(document.getElementById('unloadedMiles').value) || 0;
-  const legs = parseInt(document.getElementById('legs').value) || 1;
-  const waitTime = parseInt(document.getElementById('waitTime').value) || 0;
-
-  const perMileRate = 2.40;
-  const flatPerLeg = 25;
-  const waitChargeRate = 15; // per 30 mins
-  const processingFeeRate = 0.04;
-
-  // Base cost
-  let baseCost = (loadedMiles * perMileRate) + (legs * flatPerLeg);
-
-  // Wait time charge (only if more than 2 legs)
-  let waitCharge = 0;
-  if (legs >= 2) {
-    const waitUnits = Math.ceil(waitTime / 30);
-    waitCharge = waitUnits * waitChargeRate;
-    baseCost += waitCharge;
-  }
-
-  // Unloaded miles charge
-  let unloadedCharge = unloadedMiles * perMileRate;
-
-  let subtotal = baseCost + unloadedCharge;
-  let processingFee = subtotal * processingFeeRate;
-  let total = subtotal + processingFee;
-
-  document.getElementById('result').innerHTML =
-  `Trip Cost Breakdown:<br>
-  Base Cost: $${baseCost.toFixed(2)}<br>
-  Base Cost Breakdown:<br>
-  - Loaded Miles (${loadedMiles} miles): $${(loadedMiles * perMileRate).toFixed(2)}<br>
-  - Legs (${legs} legs): $${(legs * flatPerLeg).toFixed(2)}<br>
-  ${legs >= 2 ? `- Wait Time (${waitTime} minutes): $${waitCharge.toFixed(2)}<br>` : ''}
-  <strong>Subtotal: $${subtotal.toFixed(2)}</strong><br>
-  Unloaded Charge: $${unloadedCharge.toFixed(2)}<br>
-  Processing Fee (4%): $${processingFee.toFixed(2)}<br>
-  <strong>Total: $${total.toFixed(2)}</strong>`;
-}
-</script>
+<script src="JS/main.js"></script>
 </body>
 </html>
