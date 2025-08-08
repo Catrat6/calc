@@ -3,24 +3,26 @@ function calculateTrip() {
   const unloadedMiles = parseFloat(document.getElementById('unloadedMiles').value) || 0;
   const legs = parseInt(document.getElementById('legs').value) || 1;
   const waitTime = parseInt(document.getElementById('waitTime').value) || 0;
-  const discharge = document.getElementById('discharge').value.trim().toLowerCase();
+  const night = document.getElementById('night').value.trim().toLowerCase();
 
-  const perMileRate = 2.40;
-  const flatPerLeg = 25;
-  const dischargeUpcharge = discharge === 'yes' ? 25 : 0; // $25 upcharge for hospital discharges
+  const perMileRate = 2.50;
+  const flatPerLeg = 35;
+  
   const waitChargeRate = 15; // per 30 mins
   const processingFeeRate = 0.04;
+  const nightCharge = night === 'yes' ? 20 : 0; // $20 charge for night trips
+
 
   // Base cost
-  let baseCost = (loadedMiles * perMileRate) + (legs * flatPerLeg) + (dischargeUpcharge * legs);
+  let baseCost = (loadedMiles * perMileRate) + (legs * flatPerLeg) + nightCharge;
 
   // Wait time charge (only if more than 2 legs)
   let waitCharge = 0;
-  if (legs >= 2) {
-    const waitUnits = Math.ceil(waitTime / 30);
-    waitCharge = waitUnits * waitChargeRate;
-    baseCost += waitCharge;
-  }
+  
+  const waitUnits = Math.ceil(waitTime / 30);
+  waitCharge = waitUnits * waitChargeRate;
+  baseCost += waitCharge;
+ 
 
   // Unloaded miles charge
   let unloadedCharge = unloadedMiles * perMileRate;
@@ -33,10 +35,10 @@ function calculateTrip() {
   `Trip Cost Breakdown:<br>
   Base Cost: $${baseCost.toFixed(2)}<br>
   Base Cost Breakdown:<br>
-  - Discharge Fee: $${(dischargeUpcharge * legs).toFixed(2)}<br>
+  - Night Charge: $${nightCharge.toFixed(2)}<br>
   - Loaded Miles (${loadedMiles} miles): $${(loadedMiles * perMileRate).toFixed(2)}<br>
   - Legs (${legs} legs): $${(legs * flatPerLeg).toFixed(2)}<br>
-  ${legs >= 2 ? `- Wait Time (${waitTime} minutes): $${waitCharge.toFixed(2)}<br>` : ''}
+  - Wait Time (${waitTime} minutes): $${waitCharge.toFixed(2)}<br>
   <strong>Subtotal: $${subtotal.toFixed(2)}</strong><br>
   Unloaded Charge: $${unloadedCharge.toFixed(2)}<br>
   Processing Fee (4%): $${processingFee.toFixed(2)}<br>
