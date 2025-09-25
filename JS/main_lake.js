@@ -7,7 +7,7 @@ function calculateTrip() {
 
   const perMileRate = 2.50;
   const flatPerLeg = 35;
-  
+  const unloadedMileRate = 1.50;
   const waitChargeRate = 15; // per 30 mins
   const processingFeeRate = 0.04;
   const nightCharge = night === 'yes' ? 20 : 0; // $20 charge for night trips
@@ -25,7 +25,7 @@ function calculateTrip() {
  
 
   // Unloaded miles charge
-  let unloadedCharge = unloadedMiles * perMileRate;
+  let unloadedCharge = unloadedMiles * unloadedMileRate;
 
   let subtotal = baseCost + unloadedCharge;
   let processingFee = subtotal * processingFeeRate;

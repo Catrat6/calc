@@ -1,5 +1,7 @@
 ## Lakeshore Transport Simple Trip Cost Calc 
 
+Up to date with our current pricing as of 9/25/2025
+
 Calculator for figuring out trip costs at lakeshore transportation 
 
 Curently housed on an extension of my personal domain here:
